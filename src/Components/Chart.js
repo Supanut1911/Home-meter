@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {firebase} from '../firebase'
 import LineChart from './LineChart'
-import LineChartPf from './LinChartPf';
-import LineChartPower from './LineChartPower';
-import LineChartVoltage from './LineChartVoltage';
+// import LineChartPf from './LinChartPf';
+// import LineChartPower from './LineChartPower';
+// import LineChartVoltage from './LineChartVoltage';
 import moment from 'moment'
 
 
@@ -84,10 +84,10 @@ class Chart extends Component {
       })
 
       await this.setState({ 
-       lastedCurrent: lastCurrent,
-       lastedPf: lastPf,
-       lastedPower: lastPower,
-       lastedVoltage: lastVoltage
+       lastedCurrent: lastCurrent.toFixed(3),
+       lastedPf: lastPf.toFixed(3),
+       lastedPower: lastPower.toFixed(3),
+       lastedVoltage: lastVoltage.toFixed(3)
       })
 
     })
@@ -101,7 +101,7 @@ class Chart extends Component {
     var sum = 0
 
     for(var i = 0; i < this.state.data.length; i++) {
-      if(this.state.data[i].Date === "2020-03-12"){
+      if(this.state.data[i].Date === "2020-04-11"){
         if (i % 600 == 0){
           // var tmpresult = sum / this.state.currentArr.length
            var tmpresult = sum / 600
@@ -111,7 +111,7 @@ class Chart extends Component {
           sum += this.state.data[i].Power
         }
       }
-      else if (this.state.data[i].Date === "2020-03-13") {
+      else if (this.state.data[i].Date === "2020-04-12") {
         if (i % 600 == 0){
           // var tmpresult = sum / this.state.currentArr.length
            var tmpresult = sum / 600
@@ -121,7 +121,7 @@ class Chart extends Component {
           sum += this.state.data[i].Power
         }
       }
-      else if (this.state.data[i].Date === "2020-03-14") {
+      else if (this.state.data[i].Date === "2020-04-13") {
         if (i % 600 == 0){
           // var tmpresult = sum / this.state.currentArr.length
            var tmpresult = sum / 600
@@ -144,11 +144,16 @@ class Chart extends Component {
   claWattPerHour = () => {
     var wattSum = 0.0
     for(var i = 0; i < this.state.data.length; i++) {
-      wattSum += this.state.data[i].Power
+      var x = (this.state.data[i].Power === undefined) ? 0 : this.state.data[i].Power;
+      
+      wattSum += x
     }
-    var wattHour = wattSum / 1000
+    console.log(">>>",wattSum);
+    
+    var wattHour = wattSum / (1000 * 600)
+   
     this.setState({
-      wattHourValue: wattHour
+      wattHourValue: wattHour.toFixed(3)
     })
   }
   
@@ -162,18 +167,18 @@ class Chart extends Component {
     // console.log("day1:",this.state.resultPowerPerHoursDay1);
     // console.log("day2:",this.state.resultPowerPerHoursDay2);
     // console.log("day3:",this.state.resultPowerPerHoursDay3);
-    console.log("wattHours: ", this.state.wattHourValue)
+    // console.log("wattHours: ", this.state.wattHourValue)
 
     return (
       
       <div>
           <div> 
           <br/>
-            <center><span class="badge badge-pill badge-primary">Current: {this.state.lastedCurrent} </span></center>
-            <center> <span class="badge badge-pill badge-success">Pf: {this.state.lastedPf}</span></center>
-            <center> <span class="badge badge-pill badge-warning">Power: {this.state.lastedPower}</span> </center>
-            <center><span class="badge badge-pill badge-info">Voltage: {this.state.lastedVoltage} </span></center>
-    <center><span class="badge badge-pill badge-danger">Watt-hour: {}</span></center>
+            <center><span class="badge badge-pill badge-primary">Current: {this.state.lastedCurrent} A</span></center>
+            <center> <span class="badge badge-pill badge-success">Pf: {this.state.lastedPf} </span></center>
+            <center> <span class="badge badge-pill badge-warning">Power: {this.state.lastedPower} W</span> </center>
+            <center><span class="badge badge-pill badge-info">Voltage: {this.state.lastedVoltage} V</span></center>
+            <center><span class="badge badge-pill badge-danger">Watt-hour: {this.state.wattHourValue} unit</span></center>
             <br/>
           </div>
 
